@@ -31,65 +31,6 @@
 <script src="vendor/paho/mqttws31.js"></script>
 <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 <script src="vendor/bootstrap/bootstrap.js"></script>
-
-  
-<script>
-$(document).ready(function(){
- console.log("ready");    
-
-// Create a client instance
-var host = "wsquake.ngrok.com";
-var port = 80;
-client = new Paho.MQTT.Client(host, Number(port), "clientId");
-
-// set callback handlers
-client.onConnectionLost = onConnectionLost;
-client.onMessageArrived = onMessageArrived;
-
-// connect the client
-client.connect({onSuccess:onConnect});
-
-
-// called when the client connects
-function onConnect() {
-  // Once a connection has been made, make a subscription and send a message.
-  console.log("onConnect");
-  client.subscribe("quakes/lasthour");
-  
-}
-
-// called when the client loses its connection
-function onConnectionLost(responseObject) {
-  if (responseObject.errorCode !== 0) {
-    console.log("onConnectionLost:"+responseObject.errorMessage);
-    $('#status').html('Connection has been lost');
-    
-  }
-}
-
-// called when a message arrives
-function onMessageArrived(message) {
-  //console.log("onMessageArrived:"+message.payloadString);
-    data = JSON.parse(message.payloadString);
-    console.log(data);
-    var html = [];
-    $('#progress').html("Updating<br>");
-    for(i=0;i < data.quakes.length;i++){
-        quake = data.quakes[i];
-        console.log("Quake:" + quake);
-        html.push(quake.location + "<br>");
-        html.push(quake.magnitude + "<br>");
-        html.push('<a href="' + quake.url + '">' + quake.url + '</a>');
-        html.push('<hr><br>');
-        
-    }
-    $('#quakes').html(html.join(''));
-    d = new Date();
-    $('#progress').html("Last Updated: " + d  + "<br><br>");
-}    
-
-});
-
-</script>
+<script src="js/main.js"></script>
 </bod>
 </html>
