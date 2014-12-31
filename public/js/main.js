@@ -45,26 +45,35 @@ function onMessageArrived(message) {
   //console.log("onMessageArrived:"+message.payloadString);
     data = JSON.parse(message.payloadString);
     console.log(data);
-    var html = [];
-    $('#progress').html("Updating<br>");
-    for(i=0;i < data.quakes.length;i++){
+    if (data.quakes.length > 0) {
+      var html = [];
+      $('#progress').html("Updating<br>");
+      for(i=0;i < data.quakes.length;i++){
+        
         var quake = data.quakes[i];
         console.log("Quake:" + quake);
         var quakeTime = new Date(Number(quake.time));
         var urlInfo = "http://earthquake.usgs.gov/learn/topics/measure.php"
         var magnitude = '<a target="_blank" href="' + urlInfo + '">' 
         magnitude +=  quake.magnitude + '</a>'; 
+        // Build array 
         html.push('<h4>' + magnitude + ' @ ');
         html.push(quakeTime.toLocaleTimeString() + "</h4>");
-        html.push(quake.location + "<br>");
-        html.push('<a target="_blank" href="' + quake.url + '">' + quake.url + '</a>');
-        html.push('<hr><br>');
-        
-    }
-    $('#quakes').html(html.join(''));
-    d = new Date();
-    $('#progress').html("Last Updated: " + d  + "<br><br>");
-}    
+        html.push('<a target="_blank" href="' + quake.url + '">' ); 
+        html.push(quake.location + '</a>');
+        html.push('<hr>');
+      }
+      $('#quakes').html(html.join(''));
+      d = new Date();
+      $('#progress').html("Last Updated: " + d  + "<br><br>");
+  } 
+  else
+  {
+   console.log('No Data'); 
+    
+  }
 
+}
+  
 });
 
