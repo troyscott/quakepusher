@@ -6,7 +6,10 @@ $(document).ready(function(){
 // Create a client instance
 var host = "wsquake.ngrok.com";
 var port = 80;
-client = new Paho.MQTT.Client(host, Number(port), "clientId");
+var clientId = new Date();
+console.log(clientId.getMilliseconds());
+console.log(String(Number(clientId)));
+client = new Paho.MQTT.Client(host, Number(port), String(clientId));
 
 // set callback handlers
 client.onConnectionLost = onConnectionLost;
@@ -32,10 +35,9 @@ function onConnectionLost(responseObject) {
       'Conection has been lost ',
       '<a href="http://' + location.hostname + ':' + location.port + '" >',
       'Refresh </a>'
-      
     ]
     $('#status').html(html.join(''));
-    
+   
     
   }
 }
@@ -69,8 +71,9 @@ function onMessageArrived(message) {
   } 
   else
   {
-   console.log('No Data'); 
-    
+   console.log('No Data');
+   $('#quakes').html('No Data is vailable');
+     
   }
 
 }
