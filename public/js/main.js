@@ -72,7 +72,7 @@ function onMessageArrived(message) {
   else
   {
    console.log('No Data');
-   $('#quakes').html('No Data is vailable');
+   $('#quakes').html('No Data is available');
      
   }
 
