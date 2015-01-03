@@ -6,10 +6,10 @@ console.log("ready");
 // Create a client instance
 var host = "wsquake.ngrok.com";
 var port = 80;
-var clientId = new Date();
-console.log(clientId.getMilliseconds());
-console.log(String(Number(clientId)));
-client = new Paho.MQTT.Client(host, Number(port), String(clientId));
+var clientId = String(Number(new Date()));
+//console.log(String(Number(clientId)));
+console.log(clientId);
+client = new Paho.MQTT.Client(host, Number(port), clientId);
 
 // set callback handlers
 client.onConnectionLost = onConnectionLost;
@@ -37,8 +37,6 @@ function onConnectionLost(responseObject) {
       'Refresh </a>'
     ]
     $('#status').html(html.join(''));
-   
-    
   }
 }
 
@@ -75,7 +73,8 @@ function onMessageArrived(message) {
       // Status section
       d = new Date();
       var status = "Last Updated: " + d  + "<br>";
-      status += "Client Connections: " + clientConnections + "<br>";
+      status += "Client Connections: " + clientConnections ;
+      status += " Connection Id: " + clientId + "<br>";
       $('#status').html(status);
     } 
     else
