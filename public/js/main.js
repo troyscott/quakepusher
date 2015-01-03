@@ -70,7 +70,9 @@ function onMessageArrived(message) {
         html.push(quake.location + '</a>');
         html.push('<hr>');
       }
+      // Update Quake section
       $('#quakes').html(html.join(''));
+      // Status section
       d = new Date();
       var status = "Last Updated: " + d  + "<br>";
       status += "Client Connections: " + clientConnections + "<br>";
