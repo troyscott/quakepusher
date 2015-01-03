@@ -1,7 +1,7 @@
 
-
 $(document).ready(function(){
- console.log("ready");    
+ 
+console.log("ready");
 
 // Create a client instance
 var host = "wsquake.ngrok.com";
@@ -24,7 +24,7 @@ function onConnect() {
   console.log("onConnect");
   console.log("http://" + location.hostname + ':' + location.port);
   client.subscribe("quakes/lasthour");
-  
+  client.subscribe("$SYS/clients/connected");
 }
 
 // called when the client loses its connection
@@ -42,18 +42,23 @@ function onConnectionLost(responseObject) {
   }
 }
 
+var clientConnections = 0;
 // called when a message arrives
 function onMessageArrived(message) {
-  //console.log("onMessageArrived:"+message.payloadString);
+  // System Messages
+  if (message.destinationName == '$SYS/clients/connected'){
+    console.log(message.payloadString);  
+    clientConnections = message.payloadString;
+  }
+  
+  // Earthquake Info
+  if (message.destinationName == 'quakes/lasthour') {
     data = JSON.parse(message.payloadString);
-    console.log(data);
+    console.log('processing quakes/lasthour');
     if (data.quakes.length > 0) {
       var html = [];
-      $('#progress').html("Updating<br>");
       for(i=0;i < data.quakes.length;i++){
-        
         var quake = data.quakes[i];
-        console.log("Quake:" + quake);
         var quakeTime = new Date(Number(quake.time));
         var urlInfo = "http://earthquake.usgs.gov/learn/topics/measure.php"
         var magnitude = '<a target="_blank" href="' + urlInfo + '">' 
@@ -67,16 +72,19 @@ function onMessageArrived(message) {
       }
       $('#quakes').html(html.join(''));
       d = new Date();
-      $('#progress').html("Last Updated: " + d  + "<br><br>");
-  } 
-  else
-  {
-   console.log('No Data');
-   $('#quakes').html('No Data is available');
-     
-  }
+      var status = "Last Updated: " + d  + "<br>";
+      status += "Client Connections: " + clientConnections + "<br>";
+      $('#status').html(status);
+    } 
+    else
+    {
+      console.log('No Data');
+      $('#quakes').html('No Data is available'); 
+    }
 
+  } // quakes/lasthour
+    
+    
 }
   
 });
-
